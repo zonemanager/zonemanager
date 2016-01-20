@@ -94,6 +94,15 @@ TODO support for:
 
 # How it works
 
+## local /etc/hosts file on management server
+
+After creating `/etc/local/.dns/zone.*` files, just add this command to your crontab:
+
+```
+/opt/zonemaster/scripts/update-hosts.sh
+```
+
+
 ## Amazon Route53
 
 First, buy or move your domain to Amazon Route53, create hosted zone for it and note its ID.
@@ -125,5 +134,5 @@ dynamic3.yourdomain.com                  CNAME    ec2-52-34-55-16.us-west-2.comp
 Finally, add this script to your crontab:
 
 ```
-/opt/zonemaster/scripts/aws-get-zone-records.php default yourdomain.com Z25SD356N45NLE
+/opt/zonemaster/scripts/aws-update-zone.php default yourdomain.com Z25SD356N45NLE
 ```
