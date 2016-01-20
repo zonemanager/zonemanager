@@ -2,21 +2,22 @@
 <?php
 require_once "/opt/zonemaster/includes/functions.php";
 
-if ($argc < 4)
-	die("usage: $argv[0] <load-zone> <generate-zone> <bind9-zone-file>\n");
+if ($argc < 5)
+	die("usage: $argv[0] <load-zone> <generate-zone> <bind9-zone-file> <internal/public>\n");
 
 $inzone = $argv[1];
 $outzone = $argv[2];
 $file = $argv[3];
+$type = $argv[4];
 
-$out = load_entries($inzone);
+$out = load_entries($type, $inzone);
 $data = "";
 
 foreach ($out["A"] as $host => $ip) {
 	$len = strlen($outzone);
 	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
 		$short = substr($host, 0, -$len-1);
-		$data .= sprintf("%-40s%-10s%s\n", $short, "IN A", $ip);
+		$data .= sprintf("%-50s%-10s%s\n", $short, "IN A", $ip);
 	}
 }
 
@@ -25,9 +26,9 @@ foreach ($out["CNAME"] as $host => $alias) {
 	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
 		$short1 = substr($host, 0, -$len-1);
 		if (strrpos($alias, ".".$outzone, -$len-1) !== false)
-			$data .= sprintf("%-40s%-10s%s\n", $short1, "CNAME", substr($alias, 0, -$len-1));
+			$data .= sprintf("%-50s%-10s%s\n", $short1, "CNAME", substr($alias, 0, -$len-1));
 		else
-			$data .= sprintf("%-40s%-10s%s\n", $short1, "CNAME", $alias.".");
+			$data .= sprintf("%-50s%-10s%s\n", $short1, "CNAME", $alias.".");
 	}
 }
 

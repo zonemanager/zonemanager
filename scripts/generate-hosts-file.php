@@ -8,7 +8,7 @@ if ($argc < 3)
 $zone = $argv[1];
 $file = $argv[2];
 
-$out = load_entries($zone);
+$out = load_entries("internal", $zone);
 
 $flat = array();
 $data = "";
