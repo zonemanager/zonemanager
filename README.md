@@ -8,10 +8,9 @@ data centers, where you have:
 
 All these locations are connected using VPN tunnels and all these devices are visible for
 each other, but you still have to maintain separate DHCP (static leases) and DNS servers
-for each location.
-
-And while maintaining DHCP separately for each location can be acceptable, manual
-maintaining several DNS servers with similar internal entries can be true PITA.
+for each location. And while maintaining DHCP separately for each location can be (barely
+but still) acceptable, manual maintaining several DNS servers with similar internal entries
+can be true PITA.
 
 The situation is even worse, if your locations are behind NAT, and you want to serve some
 websites to Internet. In such case you have to maintain separately private and public DNS
@@ -24,7 +23,7 @@ With ZoneMaster you can manage all your internal and external DNS servers from a
 point. You just have to create a few simple files with syntax similar to BIND zone files
 (you can use comments):
 
-1. Main internal configuration file:
+Example main internal configuration file (common for all locations):
 
 ```
 # network devices
@@ -55,23 +54,23 @@ server2.dc1                              A          192.168.26.4
 crm.companydomain.com                    CNAME      server2.dc1
 ```
 
-2. Internal configuration file for Office 1:
+Example internal configuration file for Office 1:
 
 ```
 boss.internal                            CNAME      lap-boss.office1
 ```
 
-3. Internal configuration file for Office 2:
+Example internal configuration file for Office 2:
 
 ```
 boss.internal                            CNAME      lap-boss.office2
 ```
 
-4. Main public configuration file:
+Example public configuration file:
 
 ```
 # basic domain configuration (can and should be extended)
-companydomain.com                        A          1.2.3.4
+companydomain.com                        A          1.2.3.4  # some external hosting
 *.companydomain.com                      CNAME      companydomain.com
 
 # CRM - public office IP address
