@@ -90,3 +90,40 @@ TODO support for:
 - improved BIND support
 - MikroTik static DNS (internal)
 - Cisco static DNS (internal)
+
+
+# How it works
+
+## Amazon Route53
+
+1. Buy or move your domain to Amazon Route53, create hosted zone for it and note its ID.
+
+2. Install `awscli` AWS command line tool:
+
+```
+apt-get install python-pip
+pip install awscli
+aws configure
+```
+
+3. Create `/etc/local/.dns/zone.public` file:
+
+```
+# basic domain configuration (static entries)
+mx.daycloud.net                          A        52.35.36.25
+```
+
+and optionally `/etc/local/.dns/zone.public-yourdomain.com` file:
+
+```
+# this file contains frequently changed entries
+dynamic.yourdomain.com                   CNAME    ec2-52-10-70-178.us-west-2.compute.amazonaws.com
+dynamic2.yourdomain.com                  CNAME    ec2-52-35-36-25.us-west-2.compute.amazonaws.com
+dynamic3.yourdomain.com                  CNAME    ec2-52-34-55-16.us-west-2.compute.amazonaws.com
+```
+
+4. Add this script to your crontab:
+
+```
+/opt/zonemaster/scripts/aws-get-zone-records.php default yourdomain.com Z25SD356N45NLE
+```
