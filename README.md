@@ -77,24 +77,54 @@ companydomain.com                        A          1.2.3.4  # some external hos
 crm.companydomain.com                    A          11.22.33.44
 ```
 
-
 ZoneMaster reads such set of files and automatically updates DNS servers configuration.
-It supports:
 
+
+# Supported DNS service providers
+
+ZoneMaster currently supports:
+
+- MikroTik static DNS (internal DNS, including scanning current static DNS configuration
+  and creating ZoneMaster configuration straight from it)
 - Amazon Route53 (for public domain configuration)
-- BIND (both public and internal)
 - /etc/hosts file (for internal use on management server, to avoid relying on DNS server)
+- BIND (both public and internal, preliminary support)
 
-TODO support for:
+Future support is planned for:
 
-- improved BIND support
-- MikroTik static DNS (internal)
-- Cisco static DNS (internal)
+- BIND (improve existing support)
+- Cisco static DNS (internal DNS)
 
 
 # How it works
 
-## local /etc/hosts file on management server
+### MikroTik RouterOS-based routers
+
+If you're just about to start using ZoneMaster, you can automatically create zone files
+just by scanning static DNS entries in your MikroTik router:
+
+```
+/opt/zonemaster/scripts/mikrotik-scan-dns.php 192.168.8.1 >/etc/local/.dns/zone.all
+```
+
+This script will create complete and working zone file, which could be later edited and
+fine-tuned manually.
+
+Having configured zone files, you can push updates to MikroTik router by using another
+script (you can add it to your crontab):
+
+```
+/opt/zonemaster/scripts/mikrotik-update-dns.php home 192.168.8.1
+/opt/zonemaster/scripts/mikrotik-update-dns.php office1 192.168.11.1
+/opt/zonemaster/scripts/mikrotik-update-dns.php office2 192.168.12.1
+```
+
+Note that to make these script work, you have to create ssh key pair and install public
+key on all routers you plan to use. Here's the details in polish, how to do it:
+http://fajne.it/automatyzacja-backupu-routera-mikrotik.html
+
+
+### local /etc/hosts file on management server
 
 After creating `/etc/local/.dns/zone.*` files, just add this command to your crontab:
 
@@ -103,7 +133,7 @@ After creating `/etc/local/.dns/zone.*` files, just add this command to your cro
 ```
 
 
-## Amazon Route53
+### Amazon Route53
 
 First, buy or move your domain to Amazon Route53, create hosted zone for it and note its ID.
 

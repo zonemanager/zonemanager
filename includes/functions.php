@@ -25,6 +25,12 @@ function load_entries($type, $zone)
 }
 
 
+function mikrotik($router)
+{
+	$_router = escapeshellarg($router);
+	return "/opt/zonemaster/driver/mikrotik.sh $_router";
+}
+
 function aws_client($profile = "default")
 {
 	$_profile = escapeshellarg($profile);
