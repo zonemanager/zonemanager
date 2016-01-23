@@ -119,8 +119,8 @@ script (you can add it to your crontab):
 /opt/zonemaster/scripts/mikrotik-update-dns.php office2 192.168.12.1
 ```
 
-Note that to make these script work, you have to create ssh key pair and install public
-key on all routers you plan to use. Here's the details in polish, how to do it:
+Note that to make these scripts work, you have to create ssh key pair and install public
+key on all routers you plan to use. Here's the details (in polish language), how to do it:
 http://fajne.it/automatyzacja-backupu-routera-mikrotik.html
 
 
