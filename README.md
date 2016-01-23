@@ -20,10 +20,10 @@ entries.
 # The solution
 
 With ZoneMaster you can manage all your internal and external DNS servers from a single
-point. You just have to create a few simple files with syntax similar to BIND zone files
-(you can use comments):
+point. You just have to create a few simple files (manually or using provided scripts)
+with syntax similar to BIND zone files (and you can use comments inside them):
 
-Example main internal configuration file (common for all locations):
+Example main internal configuration file (common for all your locations):
 
 ```
 # network devices
@@ -77,7 +77,8 @@ companydomain.com                        A          1.2.3.4  # some external hos
 crm.companydomain.com                    A          11.22.33.44
 ```
 
-ZoneMaster reads such set of files and automatically updates DNS servers configuration.
+ZoneMaster reads these zone files and automatically pushes DNS all changes (added,
+changed or removed records) to proper DNS servers.
 
 
 # Supported DNS service providers
