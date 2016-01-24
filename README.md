@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/tomaszklim/zonemaster.png?branch=master)](https://travis-ci.org/tomaszklim/zonemaster)
 
+
 # The problem
 
 Imagine that you manage a medium-size local network, split across several offices and/or
