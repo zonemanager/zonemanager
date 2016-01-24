@@ -1,4 +1,4 @@
 language: php
 
-version:
+php:
   - 5.2
