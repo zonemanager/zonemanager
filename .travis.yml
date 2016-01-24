@@ -2,3 +2,5 @@ language: php
 
 php:
   - 5.2
+
+script: php -l includes/functions.php
