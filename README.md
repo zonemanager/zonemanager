@@ -128,6 +128,17 @@ key on all routers you plan to use. Here's the details (in polish language), how
 http://fajne.it/automatyzacja-backupu-routera-mikrotik.html
 
 
+### AXFR transfer
+
+ZoneMaster can also generate files by scanning your live DNS configuration, assuming that
+your DNS server allows AXFR zone transfer (which is disabled in most public DNS servers,
+but enabled by default on most BIND installations):
+
+```
+/opt/zonemaster/scripts/axfr-scan-domain.php internaldomain.com
+```
+
+
 ### local /etc/hosts file on management server
 
 After creating `/etc/local/.dns/zone.*` files, just add this command to your crontab:
