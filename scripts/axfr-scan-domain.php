@@ -12,6 +12,7 @@ $lines = explode("\n", $data);
 
 $current = array();
 $current["A"] = array();
+$current["TXT"] = array();
 $current["CNAME"] = array();
 
 $soa = array();
@@ -25,6 +26,8 @@ foreach ($lines as $line) {
 		$current["A"][$matches[1]] = $matches[2];
 	else if (preg_match("#^([a-zA-Z0-9-_.*]+)[.]\s+[0-9]+\s+IN\s+CNAME\s+([a-zA-Z0-9-_.]+)[.]$#", $line, $matches))
 		$current["CNAME"][$matches[1]] = $matches[2];
+	else if (preg_match("#^([a-zA-Z0-9-_.*]+)[.]\s+[0-9]+\s+IN\s+TXT\s+(.+)$#", $line, $matches))
+		$current["TXT"][$matches[1]] = $matches[2];
 	else if (preg_match("#^([a-zA-Z0-9-_.*]+)[.]\s+[0-9]+\s+IN\s+SOA\s+([a-zA-Z0-9-_.]+)[.]\s+([a-zA-Z0-9-_.]+)[.]\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)$#", $line, $matches))
 		$soa = $matches;
 	else if (preg_match("#^([a-zA-Z0-9-_.*]+)[.]\s+[0-9]+\s+IN\s+([A-Z0-9]+)\s+(.*)$#", $line, $matches))
@@ -37,6 +40,9 @@ asort($current);
 
 foreach ($current["A"] as $host => $ip)
 	$zonefile .= sprintf("%-40s%-10s%s\n", $host, "A", $ip);
+
+foreach ($current["TXT"] as $host => $value)
+	$zonefile .= sprintf("%-40s%-10s%s\n", $host, "TXT", $value);
 
 foreach ($current["CNAME"] as $host => $alias)
 	$zonefile .= sprintf("%-40s%-10s%s\n", $host, "CNAME", $alias);

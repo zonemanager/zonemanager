@@ -23,6 +23,18 @@ foreach ($out["A"] as $host => $ip) {
 	}
 }
 
+$data .= "\n";
+foreach ($out["TXT"] as $host => $value) {
+	$len = strlen($outzone);
+	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
+		$short = substr($host, 0, -$len-1);
+		$data .= sprintf("%-50s%-10s%s\n", $short, "IN TXT", $value);
+	} else if ($host == $outzone) {
+		$data .= sprintf("%-50s%-10s%s\n", "@", "IN TXT", $value);
+	}
+}
+
+$data .= "\n";
 foreach ($out["CNAME"] as $host => $alias) {
 	$len = strlen($outzone);
 
@@ -33,9 +45,9 @@ foreach ($out["CNAME"] as $host => $alias) {
 
 	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
 		$short1 = substr($host, 0, -$len-1);
-		$data .= sprintf("%-50s%-10s%s\n", $short1, "CNAME", $target);
+		$data .= sprintf("%-50s%-10s%s\n", $short1, "IN CNAME", $target);
 	} else if ($host == $outzone) {
-		$data .= sprintf("%-50s%-10s%s\n", "@", "CNAME", $target);
+		$data .= sprintf("%-50s%-10s%s\n", "@", "IN CNAME", $target);
 	}
 }
 
