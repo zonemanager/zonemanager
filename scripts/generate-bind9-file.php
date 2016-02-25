@@ -18,19 +18,28 @@ foreach ($out["A"] as $host => $ip) {
 	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
 		$short = substr($host, 0, -$len-1);
 		$data .= sprintf("%-50s%-10s%s\n", $short, "IN A", $ip);
+	} else if ($host == $outzone) {
+		$data .= sprintf("%-50s%-10s%s\n", "@", "IN A", $ip);
 	}
 }
 
 foreach ($out["CNAME"] as $host => $alias) {
 	$len = strlen($outzone);
+
+	if (strrpos($alias, ".".$outzone, -$len-1) !== false)
+		$target = substr($alias, 0, -$len-1);
+	else
+		$target = $alias.".";
+
 	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
 		$short1 = substr($host, 0, -$len-1);
-		if (strrpos($alias, ".".$outzone, -$len-1) !== false)
-			$data .= sprintf("%-50s%-10s%s\n", $short1, "CNAME", substr($alias, 0, -$len-1));
-		else
-			$data .= sprintf("%-50s%-10s%s\n", $short1, "CNAME", $alias.".");
+		$data .= sprintf("%-50s%-10s%s\n", $short1, "CNAME", $target);
+	} else if ($host == $outzone) {
+		$data .= sprintf("%-50s%-10s%s\n", "@", "CNAME", $target);
 	}
 }
 
-$template = file_get_contents("/opt/zonemaster/templates/bind9.tpl");
-file_put_contents($file, str_replace("@@entries@@", $data, $template));
+$content = file_get_contents("/etc/local/.dns/bind.$outzone");
+$content = str_replace("@@entries@@", $data, $content);
+$content = str_replace("@@serial@@", date("ymdhi"), $content);
+file_put_contents($file, $content);
