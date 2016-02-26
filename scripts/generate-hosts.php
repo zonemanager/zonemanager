@@ -21,7 +21,8 @@ foreach ($out["A"] as $host => $ip)
 	$flat[$host] = $ip;
 
 foreach ($out["CNAME"] as $host => $alias)
-	$flat[$host] = $out["A"][$alias];
+	if (!empty($out["A"][$alias]))
+		$flat[$host] = $out["A"][$alias];
 
 asort($flat);
 

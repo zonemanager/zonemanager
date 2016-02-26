@@ -13,17 +13,6 @@ $type = $argv[4];
 $out = load_entries($type, $inzone);
 $data = "";
 
-foreach ($out["A"] as $host => $ip) {
-	$len = strlen($outzone);
-	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
-		$short = substr($host, 0, -$len-1);
-		$data .= sprintf("%-50s%-10s%s\n", $short, "IN A", $ip);
-	} else if ($host == $outzone) {
-		$data .= sprintf("%-50s%-10s%s\n", "@", "IN A", $ip);
-	}
-}
-
-$data .= "\n";
 foreach ($out["TXT"] as $host => $value) {
 	$len = strlen($outzone);
 	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
@@ -31,6 +20,17 @@ foreach ($out["TXT"] as $host => $value) {
 		$data .= sprintf("%-50s%-10s%s\n", $short, "IN TXT", $value);
 	} else if ($host == $outzone) {
 		$data .= sprintf("%-50s%-10s%s\n", "@", "IN TXT", $value);
+	}
+}
+
+$data .= "\n";
+foreach ($out["A"] as $host => $ip) {
+	$len = strlen($outzone);
+	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
+		$short = substr($host, 0, -$len-1);
+		$data .= sprintf("%-50s%-10s%s\n", $short, "IN A", $ip);
+	} else if ($host == $outzone) {
+		$data .= sprintf("%-50s%-10s%s\n", "@", "IN A", $ip);
 	}
 }
 
