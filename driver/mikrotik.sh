@@ -21,4 +21,4 @@ fi
 #
 # further details: http://fajne.it/automatyzacja-backupu-routera-mikrotik.html
 #
-ssh -y -i /etc/local/.ssh/id_backup_mikrotik -p $port admin@$host $@
+ssh -y -i /etc/local/.ssh/id_backup_mikrotik -p $port -o StrictHostKeyChecking=no admin@$host $@
