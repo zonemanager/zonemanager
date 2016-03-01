@@ -1,11 +1,11 @@
 <?php
 
-function load_entries($type, $zone)
+function load_dns_entries($type, $zone)
 {
 	$_type = escapeshellarg($type);
 	$_zone = escapeshellarg($zone);
 
-	$data = shell_exec("/opt/zonemaster/driver/load.sh $_type $_zone");
+	$data = shell_exec("/opt/zonemaster/driver/load-dns.sh $_type $_zone");
 	$lines = explode("\n", $data);
 
 	$out = array();
@@ -19,6 +19,27 @@ function load_entries($type, $zone)
 	}
 
 	if (empty($out["A"]))
+		throw new Exception("unable to load zone file, aborting");
+
+	return $out;
+}
+
+function load_dhcp_entries($zone)
+{
+	$_zone = escapeshellarg($zone);
+
+	$data = shell_exec("/opt/zonemaster/driver/load-dhcp.sh $_zone");
+	$lines = explode("\n", $data);
+
+	$out = array();
+
+	foreach ($lines as $line) {
+		if (empty($line)) continue;
+		$tmp = explode(" ", $line);
+		$out[$tmp[0]] = array($tmp[1], $tmp[2]);
+	}
+
+	if (empty($out))
 		throw new Exception("unable to load zone file, aborting");
 
 	return $out;

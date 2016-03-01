@@ -11,7 +11,7 @@ $zoneid = escapeshellarg($argv[3]);
 
 $aws = aws_client($profile);
 
-$master = load_entries("public", $domain);
+$master = load_dns_entries("public", $domain);
 $current = array();
 $changes = array();
 

@@ -9,7 +9,7 @@ $domain = $argv[1];
 $router = $argv[2];
 $debug = (isset($argv[3]) && $argv[3] == "debug");
 
-$master = load_entries("internal", $domain);
+$master = load_dns_entries("internal", $domain);
 
 $mikrotik = mikrotik($router);
 

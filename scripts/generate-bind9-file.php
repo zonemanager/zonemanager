@@ -10,7 +10,7 @@ $outzone = $argv[2];
 $file = $argv[3];
 $type = $argv[4];
 
-$out = load_entries($type, $inzone);
+$out = load_dns_entries($type, $inzone);
 $data = "";
 
 foreach ($out["TXT"] as $host => $value) {

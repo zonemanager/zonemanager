@@ -12,7 +12,7 @@ $file = $argv[3];
 if (!file_exists("/opt/zonemaster/templates/$os/hosts.tpl"))
 	die("error: unrecognized operating system version\n");
 
-$out = load_entries("internal", $zone);
+$out = load_dns_entries("internal", $zone);
 
 $flat = array();
 $data = "";
