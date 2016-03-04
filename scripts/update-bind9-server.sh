@@ -37,7 +37,7 @@ for domain in $@; do
 	/opt/zonemaster/scripts/generate-bind9-file.php $domain $domain $file $scope
 
 	if [ -s $file ]; then
-		scp -B -p -i $key $file root@$server:/etc/bind
+		scp -B -p -i $key -o StrictHostKeyChecking=no $file root@$server:/etc/bind
 	fi
 done
 
