@@ -11,19 +11,13 @@ $netmask = $argv[3];
 $file = $argv[4];
 $authoritative = (!empty($argv[5]) && $argv[5] == "authoritative");
 
-$assignments = load_dhcp_entries($inzone);
+$assignments = load_dhcp_entries($inzone, $netaddr, $netmask);
 $data = "";
 
-$maskLong = ip2long($netmask);
-$net = long2ip($maskLong & ip2long($netaddr));
-
-foreach ($assignments as $address => $assign) {
+foreach ($assignments as $mac => $assign) {
 	$ip = $assign[0];
-	$start = long2ip($maskLong & ip2long($ip));
-	if ($start == $net) {
-		$alias = $assign[1];
-		$data .= "host $alias {\n\thardware ethernet $address;\n\tfixed-address $ip;\n}\n\n";
-	}
+	$alias = $assign[1];
+	$data .= "host $alias {\n\thardware ethernet $mac;\n\tfixed-address $ip;\n}\n\n";
 }
 
 if ($authoritative)

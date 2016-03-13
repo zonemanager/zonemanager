@@ -24,19 +24,24 @@ function load_dns_entries($type, $zone)
 	return $out;
 }
 
-function load_dhcp_entries($zone)
+function load_dhcp_entries($zone, $netaddr, $netmask)
 {
 	$_zone = escapeshellarg($zone);
 
 	$data = shell_exec("/opt/zonemaster/driver/load-dhcp.sh $_zone");
 	$lines = explode("\n", $data);
 
+	$maskLong = ip2long($netmask);
+	$net = long2ip($maskLong & ip2long($netaddr));
 	$out = array();
 
 	foreach ($lines as $line) {
 		if (empty($line)) continue;
 		$tmp = explode(" ", $line);
-		$out[$tmp[0]] = array($tmp[1], $tmp[2]);
+		$ip = $tmp[1];
+		$start = long2ip($maskLong & ip2long($ip));
+		if ($start == $net)
+			$out[$tmp[0]] = array($ip, $tmp[2]);
 	}
 
 	if (empty($out))
@@ -44,7 +49,6 @@ function load_dhcp_entries($zone)
 
 	return $out;
 }
-
 
 function mikrotik($router)
 {
