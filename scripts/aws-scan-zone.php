@@ -24,7 +24,7 @@ foreach ($sets["ResourceRecordSets"] as $entry) {
 	$name = $entry["Name"];
 	$value = $entry["ResourceRecords"][0]["Value"];
 	if (in_array($type, $types, true))
-		$current[$type][substr($name, 0, -1)] = trim($value, '"');
+		$current[$type][substr($name, 0, -1)] = $value;
 }
 
 foreach ($types as $type)

@@ -10,10 +10,10 @@ $outzone = $argv[2];
 $file = $argv[3];
 $type = $argv[4];
 
-$out = load_dns_entries($type, $inzone);
+$master = load_dns_entries($type, $inzone);
 $data = "";
 
-foreach ($out["TXT"] as $host => $value) {
+foreach ($master["TXT"] as $host => $value) {
 	$len = strlen($outzone);
 	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
 		$short = substr($host, 0, -$len-1);
@@ -24,7 +24,7 @@ foreach ($out["TXT"] as $host => $value) {
 }
 
 $data .= "\n";
-foreach ($out["A"] as $host => $ip) {
+foreach ($master["A"] as $host => $ip) {
 	$len = strlen($outzone);
 	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
 		$short = substr($host, 0, -$len-1);
@@ -35,7 +35,7 @@ foreach ($out["A"] as $host => $ip) {
 }
 
 $data .= "\n";
-foreach ($out["CNAME"] as $host => $alias) {
+foreach ($master["CNAME"] as $host => $alias) {
 	$len = strlen($outzone);
 
 	if (strrpos($alias, ".".$outzone, -$len-1) !== false)

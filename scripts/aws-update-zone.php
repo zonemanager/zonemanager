@@ -25,11 +25,15 @@ foreach ($sets["ResourceRecordSets"] as $entry) {
 	$name = $entry["Name"];
 	$value = $entry["ResourceRecords"][0]["Value"];
 	if (in_array($type, $types, true))
-		$current[$type][substr($name, 0, -1)] = trim($value, '"');
+		$current[$type][substr($name, 0, -1)] = $value;
 }
 
 foreach ($types as $type) {
 	foreach ($master[$type] as $host => $value) {
+
+		if ($host != $domain && strrpos($host, ".".$domain, -1-strlen($domain)) === false)
+			continue;
+
 		if (!isset($current[$type][$host]))
 			$changes[] = aws_record_change("CREATE", $type, $host, $value);
 		else if ($current[$type][$host] != $value)
