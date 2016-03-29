@@ -21,7 +21,7 @@ if (empty($sets))
 
 foreach ($sets["ResourceRecordSets"] as $entry) {
 	$type = $entry["Type"];
-	$name = $entry["Name"];
+	$name = str_replace("\\052", "*", $entry["Name"]);
 	$value = $entry["ResourceRecords"][0]["Value"];
 	if (in_array($type, $types, true))
 		$current[$type][substr($name, 0, -1)] = $value;

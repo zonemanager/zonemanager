@@ -14,7 +14,7 @@ function load_dns_entries($type, $zone)
 
 	foreach ($lines as $line) {
 		if (empty($line)) continue;
-		$tmp = explode(" ", $line);
+		$tmp = explode(" ", $line, 3);
 		$out[$tmp[1]][$tmp[0]] = $tmp[2];
 	}
 
