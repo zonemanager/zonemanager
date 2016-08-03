@@ -23,9 +23,9 @@ $current = array();
 $changes = array();
 
 foreach ($lines as $line)
-	if (preg_match("#^add address=([0-9.]+) (always-broadcast=yes )?(block-access=yes )?comment=([a-zA-Z0-9-_. \"]+) disabled=(yes|no) mac-address=([A-F0-9:]+) server#", $line, $matches))
-		if ($matches[4] != "yes")
-			$current[$matches[6]] = $matches[1];
+	if (preg_match("#^add address=([0-9.]+) (always-broadcast=yes )?(block-access=yes )?comment=([a-zA-Z0-9-_. \"]+) (disabled=(yes|no) )?mac-address=([A-F0-9:]+) server#", $line, $matches))
+		if ($matches[6] != "yes")
+			$current[$matches[7]] = $matches[1];
 
 foreach ($assignments as $mac => $assign) {
 	$ip = $assign[0];
