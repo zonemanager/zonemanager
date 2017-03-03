@@ -2,12 +2,11 @@
 <?php
 require_once "/opt/zonemaster/includes/functions.php";
 
-if ($argc < 4)
-	die("usage: $argv[0] <system> <zone> <hosts-file>\n");
+if ($argc < 3)
+	die("usage: $argv[0] <system> <zone>\n");
 
 $os = $argv[1];
 $zone = $argv[2];
-$file = $argv[3];
 
 if (!file_exists("/opt/zonemaster/templates/$os/hosts.tpl"))
 	die("error: unrecognized operating system version\n");
@@ -38,4 +37,4 @@ foreach ($flat as $host => $ip) {
 }
 
 $template = file_get_contents("/opt/zonemaster/templates/$os/hosts.tpl");
-file_put_contents($file, str_replace("@@entries@@", $data, $template));
+echo str_replace("@@entries@@", $data, $template);
