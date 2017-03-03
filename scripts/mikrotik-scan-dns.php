@@ -16,10 +16,11 @@ $current = array();
 $changes = array();
 
 foreach ($lines as $line)
-	if (preg_match("#^add address=([0-9.]+) disabled=(yes|no) name=([a-zA-Z0-9-_.]+) ttl=(.*)$#", $line, $matches)) {
-		$type = (strpos($matches[4], "d") !== false ? "A" : "CNAME");
-		$current[$type][$matches[3]] = $matches[1];
+	if (preg_match("#^add address=([0-9.]+) (disabled=(yes|no) )?name=([a-zA-Z0-9-_.]+)( ttl=(.*))?#", $line, $matches)) {
+		$type = (!isset($matches[5]) || strpos($matches[5], "d") !== false ? "A" : "CNAME");
+		$current[$type][$matches[4]] = $matches[1];
 	}
+
 
 foreach ($current["A"] as $host => $ip) {
 	echo sprintf("%-40s%-10s%s\n", $host, "A", $ip);

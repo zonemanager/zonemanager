@@ -23,9 +23,9 @@ $changes = array();
 $types = array("A", "CNAME");
 
 foreach ($lines as $line)
-	if (preg_match("#^add address=([0-9.]+) disabled=(yes|no) name=([a-zA-Z0-9-_.]+) ttl#", $line, $matches))
-		if ($matches[2] != "yes")
-			$current[$matches[3]] = $matches[1];
+	if (preg_match("#^add address=([0-9.]+) (disabled=(yes|no) )?name=([a-zA-Z0-9-_.]+)#", $line, $matches))
+		if ($matches[3] != "yes")
+			$current[$matches[4]] = $matches[1];
 
 foreach ($master["A"] as $host => $value) {
 	if (strpos($host, "*") !== false) continue;
