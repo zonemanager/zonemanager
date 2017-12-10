@@ -1,4 +1,6 @@
 #!/bin/bash
+. /opt/farm/scripts/functions.custom
+. /opt/farm/scripts/functions.keys
 
 if [ "$1" = "" ]; then exit 1; fi
 
@@ -21,4 +23,5 @@ fi
 #
 # further details: http://fajne.it/automatyzacja-backupu-routera-mikrotik.html
 #
-ssh -y -i /etc/local/.ssh/id_backup_mikrotik -p $port -o StrictHostKeyChecking=no admin@$host $@
+sshkey=`ssh_network_device_key_storage_filename mikrotik`
+ssh -y -i $sshkey -p $port -o StrictHostKeyChecking=no admin@$host $@

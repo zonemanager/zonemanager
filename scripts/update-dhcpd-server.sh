@@ -1,7 +1,6 @@
 #!/bin/bash
 . /opt/farm/scripts/init
 . /opt/farm/scripts/functions.custom
-. /opt/farm/scripts/functions.keys
 
 
 if [ "$4" = "" ]; then
@@ -16,7 +15,7 @@ server=$1
 zone=$2
 netaddr=$3
 netmask=$4
-key=`ssh_management_key_storage_filename $server`
+key=`ssh_dedicated_key_storage_filename $server root`
 
 hour=`date +%H%M`
 day=`date +%d`
