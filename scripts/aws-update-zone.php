@@ -11,6 +11,7 @@ $zoneid = escapeshellarg($argv[3]);
 
 $aws = aws_client($profile);
 
+$offset = -1 - strlen($domain);
 $master = load_dns_entries("public", $domain);
 $current = array();
 $changes = array();
@@ -31,7 +32,7 @@ foreach ($sets["ResourceRecordSets"] as $entry) {
 foreach ($types as $type) {
 	foreach ($master[$type] as $host => $value) {
 
-		if ($host != $domain && strrpos($host, ".".$domain, -1-strlen($domain)) === false)
+		if ($host != $domain && (strlen($host) < abs($offset) || strrpos($host, ".".$domain, $offset) === false))
 			continue;
 
 		if (!isset($current[$type][$host]))

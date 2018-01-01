@@ -10,44 +10,41 @@ $outzone = $argv[2];
 $file = $argv[3];
 $type = $argv[4];
 
+$offset = -1 - strlen($outzone);
 $master = load_dns_entries($type, $inzone);
 $data = "";
 
 foreach ($master["TXT"] as $host => $value) {
-	$len = strlen($outzone);
-	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
-		$short = substr($host, 0, -$len-1);
-		$data .= sprintf("%-50s%-10s%s\n", $short, "IN TXT", $value);
-	} else if ($host == $outzone) {
+	if ($host == $outzone) {
 		$data .= sprintf("%-50s%-10s%s\n", "@", "IN TXT", $value);
+	} else if (strlen($host) >= abs($offset) && strrpos($host, ".".$outzone, $offset) !== false) {
+		$short = substr($host, 0, $offset);
+		$data .= sprintf("%-50s%-10s%s\n", $short, "IN TXT", $value);
 	}
 }
 
 $data .= "\n";
 foreach ($master["A"] as $host => $ip) {
-	$len = strlen($outzone);
-	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
-		$short = substr($host, 0, -$len-1);
-		$data .= sprintf("%-50s%-10s%s\n", $short, "IN A", $ip);
-	} else if ($host == $outzone) {
+	if ($host == $outzone) {
 		$data .= sprintf("%-50s%-10s%s\n", "@", "IN A", $ip);
+	} else if (strlen($host) >= abs($offset) && strrpos($host, ".".$outzone, $offset) !== false) {
+		$short = substr($host, 0, $offset);
+		$data .= sprintf("%-50s%-10s%s\n", $short, "IN A", $ip);
 	}
 }
 
 $data .= "\n";
 foreach ($master["CNAME"] as $host => $alias) {
-	$len = strlen($outzone);
-
-	if (strrpos($alias, ".".$outzone, -$len-1) !== false)
-		$target = substr($alias, 0, -$len-1);
+	if (strrpos($alias, ".".$outzone, $offset) !== false)
+		$target = substr($alias, 0, $offset);
 	else
 		$target = $alias.".";
 
-	if (strrpos($host, ".".$outzone, -$len-1) !== false) {
-		$short1 = substr($host, 0, -$len-1);
-		$data .= sprintf("%-50s%-10s%s\n", $short1, "IN CNAME", $target);
-	} else if ($host == $outzone) {
+	if ($host == $outzone) {
 		$data .= sprintf("%-50s%-10s%s\n", "@", "IN CNAME", $target);
+	} else if (strlen($host) >= abs($offset) && strrpos($host, ".".$outzone, $offset) !== false) {
+		$short1 = substr($host, 0, $offset);
+		$data .= sprintf("%-50s%-10s%s\n", $short1, "IN CNAME", $target);
 	}
 }
 
