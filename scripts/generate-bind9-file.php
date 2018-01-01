@@ -50,5 +50,5 @@ foreach ($master["CNAME"] as $host => $alias) {
 
 $content = file_get_contents("/etc/local/.dns/bind.$outzone");
 $content = str_replace("@@entries@@", $data, $content);
-$content = str_replace("@@serial@@", date("ymdhi"), $content);
+$content = str_replace("@@serial@@", date("ymdHi"), $content);
 file_put_contents($file, $content);
