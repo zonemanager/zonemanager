@@ -10,12 +10,20 @@ function load_dns_entries($type, $zone)
 
 	$out = array();
 	$out["A"] = array();
+	$out["TXT"] = array();
 	$out["CNAME"] = array();
 
 	foreach ($lines as $line) {
 		if (empty($line)) continue;
 		$tmp = explode(" ", $line, 3);
-		$out[$tmp[1]][$tmp[0]] = $tmp[2];
+		$entry = $tmp[0];
+		$type = $tmp[1];
+		$value = $tmp[2];
+
+		if (isset($out[$type][$entry]))
+			$out[$type][$entry] .= "\n" . $value;
+		else
+			$out[$type][$entry] = $value;
 	}
 
 	if (empty($out["A"]))
@@ -23,6 +31,7 @@ function load_dns_entries($type, $zone)
 
 	return $out;
 }
+
 
 function load_dhcp_entries($zone, $netaddr, $netmask)
 {
@@ -50,11 +59,13 @@ function load_dhcp_entries($zone, $netaddr, $netmask)
 	return $out;
 }
 
+
 function mikrotik($router)
 {
 	$_router = escapeshellarg($router);
 	return "/opt/zonemaster/driver/mikrotik.sh $_router";
 }
+
 
 function aws_client($profile = "default")
 {
@@ -62,17 +73,63 @@ function aws_client($profile = "default")
 	return "/usr/local/bin/aws --profile $_profile";
 }
 
+
+# https://docs.aws.amazon.com/Route53/latest/APIReference/API_ResourceRecordSet.html
 function aws_record_change($action, $type, $host, $value)
 {
-	return array(
+	$set = array(
 		"Action" => $action,
 		"ResourceRecordSet" => array(
 			"Name" => $host,
 			"Type" => $type,
 			"TTL" => 300,
-			"ResourceRecords" => array( array(
-				"Value" => $value,
-			) ),
+			"ResourceRecords" => array(),
 		),
 	);
+
+	if (strpos($value, "\n") === false) {
+		$set["ResourceRecordSet"]["ResourceRecords"][] = array("Value" => $value);
+	} else {
+		$values = explode("\n", $value);
+		foreach ($values as $subvalue)
+			$set["ResourceRecordSet"]["ResourceRecords"][] = array("Value" => $subvalue);
+	}
+
+	return $set;
+}
+
+
+# http://www.zytrax.com/books/dns/ch8/a.html
+function bind_entry($name, $type, $value)
+{
+	if (strpos($value, "\n") === false)
+		return sprintf("%-50s%-10s%s\n", $name, $type, $value);
+
+	$values = explode("\n", $value);
+	$first = array_shift($values);
+	$data = sprintf("%-50s%-10s%s\n", $name, $type, $first);
+
+	foreach ($values as $subvalue)
+		$data .= sprintf("%-50s%-10s%s\n", "", $type, $subvalue);
+
+	return $data;
+}
+
+
+# http://www.zytrax.com/books/dns/ch8/txt.html
+function bind_txt_entry($name, $type, $value)
+{
+	if (strpos($value, "\n") === false)
+		return sprintf("%-50s%-10s%s\n", $name, $type, $value);
+
+	$values = explode("\n", $value);
+	$first = array_shift($values);
+	$last = array_pop($values);
+	$data = sprintf("%-50s%-10s(%s\n", $name, $type, $first);
+
+	foreach ($values as $subvalue)
+		$data .= sprintf("%-60s%s\n", "", $subvalue);
+
+	$data .= sprintf("%-60s%s)\n", "", $last);
+	return $data;
 }

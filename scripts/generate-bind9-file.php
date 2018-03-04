@@ -16,20 +16,20 @@ $data = "";
 
 foreach ($master["TXT"] as $host => $value) {
 	if ($host == $outzone) {
-		$data .= sprintf("%-50s%-10s%s\n", "@", "IN TXT", $value);
+		$data .= bind_txt_entry("@", "IN TXT", $value);
 	} else if (strlen($host) >= abs($offset) && strrpos($host, ".".$outzone, $offset) !== false) {
 		$short = substr($host, 0, $offset);
-		$data .= sprintf("%-50s%-10s%s\n", $short, "IN TXT", $value);
+		$data .= bind_txt_entry($short, "IN TXT", $value);
 	}
 }
 
 $data .= "\n";
 foreach ($master["A"] as $host => $ip) {
 	if ($host == $outzone) {
-		$data .= sprintf("%-50s%-10s%s\n", "@", "IN A", $ip);
+		$data .= bind_entry("@", "IN A", $ip);
 	} else if (strlen($host) >= abs($offset) && strrpos($host, ".".$outzone, $offset) !== false) {
 		$short = substr($host, 0, $offset);
-		$data .= sprintf("%-50s%-10s%s\n", $short, "IN A", $ip);
+		$data .= bind_entry($short, "IN A", $ip);
 	}
 }
 
@@ -41,10 +41,10 @@ foreach ($master["CNAME"] as $host => $alias) {
 		$target = $alias.".";
 
 	if ($host == $outzone) {
-		$data .= sprintf("%-50s%-10s%s\n", "@", "IN CNAME", $target);
+		$data .= bind_entry("@", "IN CNAME", $target);
 	} else if (strlen($host) >= abs($offset) && strrpos($host, ".".$outzone, $offset) !== false) {
 		$short1 = substr($host, 0, $offset);
-		$data .= sprintf("%-50s%-10s%s\n", $short1, "IN CNAME", $target);
+		$data .= bind_entry($short1, "IN CNAME", $target);
 	}
 }
 

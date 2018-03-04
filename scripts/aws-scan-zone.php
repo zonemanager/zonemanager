@@ -21,12 +21,27 @@ if (empty($sets))
 
 foreach ($sets["ResourceRecordSets"] as $entry) {
 	$type = $entry["Type"];
-	$name = str_replace("\\052", "*", $entry["Name"]);
+	$tmp = str_replace("\\052", "*", $entry["Name"]);
+	$name = substr($tmp, 0, -1);
 	$value = $entry["ResourceRecords"][0]["Value"];
 	if (in_array($type, $types, true))
-		$current[$type][substr($name, 0, -1)] = $value;
+		$current[$type][$name] = $value;
+
+	for ($more = 1; $more < 20; $more++) {
+		if (empty($entry["ResourceRecords"][$more]))
+			break;
+		$value = $entry["ResourceRecords"][$more]["Value"];
+		$current[$type][$name] .= "\n" . $value;
+	}
 }
 
 foreach ($types as $type)
-	foreach ($current[$type] as $host => $value)
-		echo sprintf("%-60s%-10s%s\n", $host, $type, $value);
+	foreach ($current[$type] as $host => $value) {
+		if (strpos($value, "\n") === false) {
+			echo sprintf("%-60s%-10s%s\n", $host, $type, $value);
+		} else {
+			$values = explode("\n", $value);
+			foreach ($values as $subvalue)
+				echo sprintf("%-60s%-10s%s\n", $host, $type, $subvalue);
+		}
+	}
