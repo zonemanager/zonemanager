@@ -26,7 +26,7 @@ path=/var/cache/dns/$year/${year}${mon}/${year}${mon}${day}/$server/$hour
 mkdir -p $path
 
 file=$path/dhcpd.conf
-/opt/zonemaster/scripts/generate-dhcpd-config.php $zone $netaddr $netmask $file $5
+/opt/zonemaster/scripts/dhcpd/generate-config-file.php $zone $netaddr $netmask $file $5
 
 if [ -s $file ]; then
 	scp -i $key -B -p -o StrictHostKeyChecking=no $file root@$server:/etc/dhcp

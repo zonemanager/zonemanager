@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-require_once "/opt/zonemaster/includes/functions.php";
+require_once dirname(__FILE__)."/../functions.php";
 
 if ($argc < 2)
 	die("usage: $argv[0] <domain-name>\n");

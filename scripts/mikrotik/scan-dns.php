@@ -1,12 +1,12 @@
 #!/usr/bin/php
 <?php
-require_once "/opt/zonemaster/includes/functions.php";
+require_once dirname(__FILE__)."/../functions.php";
 
 if ($argc < 2)
 	die("usage: $argv[0] <router-hostname[:port]>\n");
 
-$router = $argv[1];
-$mikrotik = mikrotik($router);
+$router = escapeshellarg($argv[1]);
+$mikrotik = dirname(__FILE__)."/driver.sh $router";
 
 $data = shell_exec("$mikrotik ip dns export");
 $data = str_replace("\\\r\n    ", "", $data);

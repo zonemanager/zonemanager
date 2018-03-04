@@ -1,14 +1,15 @@
 #!/usr/bin/php
 <?php
-require_once "/opt/zonemaster/includes/functions.php";
+require_once dirname(__FILE__)."/../functions.php";
 
 if ($argc < 3)
 	die("usage: $argv[0] <system> <zone>\n");
 
 $os = $argv[1];
 $zone = $argv[2];
+$file = dirname(__FILE__)."/../../templates/$os/hosts.tpl";
 
-if (!file_exists("/opt/zonemaster/templates/$os/hosts.tpl"))
+if (!file_exists($file))
 	die("error: unrecognized operating system version\n");
 
 $out = load_dns_entries("internal", $zone);
@@ -36,5 +37,5 @@ foreach ($flat as $host => $ip) {
 	}
 }
 
-$template = file_get_contents("/opt/zonemaster/templates/$os/hosts.tpl");
+$template = file_get_contents($file);
 echo str_replace("@@entries@@", $data, $template);

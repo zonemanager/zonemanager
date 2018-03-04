@@ -103,7 +103,7 @@ If you're just about to start using ZoneMaster, you can automatically create zon
 just by scanning static DNS entries in your MikroTik router:
 
 ```
-/opt/zonemaster/scripts/mikrotik-scan-dns.php 192.168.8.1 >/etc/local/.dns/zone.all
+/opt/zonemaster/scripts/mikrotik/scan-dns.php 192.168.8.1 >/etc/local/.dns/zone.all
 ```
 
 This script will create complete and working zone file, which could be later edited and
@@ -113,9 +113,9 @@ Having configured zone files, you can push updates to MikroTik router by using a
 script (you can add it to your crontab):
 
 ```
-/opt/zonemaster/scripts/mikrotik-update-dns.php home 192.168.8.1
-/opt/zonemaster/scripts/mikrotik-update-dns.php office1 192.168.11.1
-/opt/zonemaster/scripts/mikrotik-update-dns.php office2 192.168.12.1
+/opt/zonemaster/scripts/mikrotik/update-dns.php home 192.168.8.1
+/opt/zonemaster/scripts/mikrotik/update-dns.php office1 192.168.11.1
+/opt/zonemaster/scripts/mikrotik/update-dns.php office2 192.168.12.1
 ```
 
 Note that to make these scripts work, you have to create ssh key pair and install public
@@ -130,7 +130,7 @@ your DNS server allows AXFR zone transfer (which is disabled in most public DNS 
 but enabled by default on most BIND installations):
 
 ```
-/opt/zonemaster/scripts/axfr-scan-domain.php internaldomain.com
+/opt/zonemaster/scripts/bind/axfr-scan-domain.php internaldomain.com
 ```
 
 This will generate 2 files:
@@ -144,7 +144,7 @@ Now you have to review these files, adjust them manually if needed, and rename (
 When you have created the final set of files, execute or add to your crontab:
 
 ```
-/opt/zonemaster/scripts/update-bind9-server.sh your-dns-server.com internaldomain.com
+/opt/zonemaster/scripts/bind/cron.sh your-dns-server.com internaldomain.com
 ```
 
 
@@ -153,7 +153,7 @@ When you have created the final set of files, execute or add to your crontab:
 After creating `/etc/local/.dns/zone.*` files, just add this command to your crontab:
 
 ```
-/opt/zonemaster/scripts/update-hosts.sh
+/opt/zonemaster/scripts/hosts/cron.sh
 ```
 
 
@@ -172,7 +172,7 @@ aws configure
 Now you can create public zone files. You can do it either manually, or using this script:
 
 ```
-/opt/zonemaster/scripts/aws-scan-zone.php default Z25SD356N45NLE >/etc/local/.dns/yourdomain.com
+/opt/zonemaster/scripts/aws/scan-zone.php default Z25SD356N45NLE >/etc/local/.dns/yourdomain.com
 ```
 
 It scans the current configuration of your domain record sets and generates the zone
@@ -206,5 +206,5 @@ Finally, after you do any required manual arrangements to your zone files, add t
 script to your crontab:
 
 ```
-/opt/zonemaster/scripts/aws-update-zone.php default yourdomain.com Z25SD356N45NLE
+/opt/zonemaster/scripts/aws/cron.sh default yourdomain.com Z25SD356N45NLE
 ```

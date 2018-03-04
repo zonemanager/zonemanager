@@ -1,9 +1,9 @@
 #!/usr/bin/php
 <?php
-require_once "/opt/zonemaster/includes/functions.php";
+require_once dirname(__FILE__)."/../functions.php";
 
 if ($argc < 4)
-	die("usage: $argv[0] <awscli-profile-name> <domain-name> <zone-id>\n");
+	die("usage: $argv[0] <awscli-profile-name> <domain-name> <zone-id> [archive-directory]\n");
 
 $profile = $argv[1];
 $domain = $argv[2];
@@ -69,6 +69,8 @@ if (!empty($changes)) {
 
 	if (empty($response["ChangeInfo"]["Status"]) || $response["ChangeInfo"]["Status"] != "PENDING")
 		echo "error: wrong response from route53, request details left in file $file\n";
+	else if ($argc > 4 && file_exists($argv[4]))
+		rename($file, $argv[4]."/aws-dns-change-$profile-$domain.json");
 	else
 		unlink($file);
 }

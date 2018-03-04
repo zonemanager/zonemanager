@@ -1,20 +1,19 @@
 #!/usr/bin/php
 <?php
-require_once "/opt/zonemaster/includes/functions.php";
+require_once dirname(__FILE__)."/../functions.php";
 
 if ($argc < 5)
 	die("usage: $argv[0] <load-zone> <router-hostname[:port]> <network-address> <network-mask> [debug]\n");
 
 $inzone = $argv[1];
-$router = $argv[2];
+$router = escapeshellarg($argv[2]);
 $netaddr = $argv[3];
 $netmask = $argv[4];
 $debug = (isset($argv[5]) && $argv[5] == "debug");
 
 $assignments = load_dhcp_entries($inzone, $netaddr, $netmask);
 
-$mikrotik = mikrotik($router);
-
+$mikrotik = dirname(__FILE__)."/driver.sh $router";
 $data = shell_exec("$mikrotik ip dhcp-server lease export");
 $data = str_replace("\\\r\n    ", "", $data);
 $lines = explode("\n", $data);

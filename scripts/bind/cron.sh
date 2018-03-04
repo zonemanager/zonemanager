@@ -35,7 +35,7 @@ mkdir -p $path
 for domain in $@; do
 
 	file=$path/db.$domain
-	/opt/zonemaster/scripts/generate-bind9-file.php $inzone $domain $file $scope
+	/opt/zonemaster/scripts/bind/generate-zone-file.php $inzone $domain $file $scope
 
 	if [ -s $file ]; then
 		scp -B -p -i $key -o StrictHostKeyChecking=no $file root@$server:/etc/bind

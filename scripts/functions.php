@@ -5,7 +5,8 @@ function load_dns_entries($type, $zone)
 	$_type = escapeshellarg($type);
 	$_zone = escapeshellarg($zone);
 
-	$data = shell_exec("/opt/zonemaster/driver/load-dns.sh $_type $_zone");
+	$dir = dirname(__FILE__);
+	$data = shell_exec("$dir/load-dns.sh $_type $_zone");
 	$lines = explode("\n", $data);
 
 	$out = array();
@@ -37,7 +38,8 @@ function load_dhcp_entries($zone, $netaddr, $netmask)
 {
 	$_zone = escapeshellarg($zone);
 
-	$data = shell_exec("/opt/zonemaster/driver/load-dhcp.sh $_zone");
+	$dir = dirname(__FILE__);
+	$data = shell_exec("$dir/load-dhcp.sh $_zone");
 	$lines = explode("\n", $data);
 
 	$maskLong = ip2long($netmask);
@@ -57,13 +59,6 @@ function load_dhcp_entries($zone, $netaddr, $netmask)
 		throw new Exception("unable to load zone file, aborting");
 
 	return $out;
-}
-
-
-function mikrotik($router)
-{
-	$_router = escapeshellarg($router);
-	return "/opt/zonemaster/driver/mikrotik.sh $_router";
 }
 
 

@@ -1,18 +1,17 @@
 #!/usr/bin/php
 <?php
-require_once "/opt/zonemaster/includes/functions.php";
+require_once dirname(__FILE__)."/../functions.php";
 
 if ($argc < 3)
 	die("usage: $argv[0] <load-zone> <router-hostname[:port]> [debug]\n");
 
 $inzone = $argv[1];
-$router = $argv[2];
+$router = escapeshellarg($argv[2]);
 $debug = (isset($argv[3]) && $argv[3] == "debug");
 
 $master = load_dns_entries("internal", $inzone);
 
-$mikrotik = mikrotik($router);
-
+$mikrotik = dirname(__FILE__)."/driver.sh $router";
 $data = shell_exec("$mikrotik ip dns export");
 $data = str_replace("\\\r\n    ", "", $data);
 $lines = explode("\n", $data);
