@@ -3,7 +3,7 @@
 require_once dirname(__FILE__)."/../functions.php";
 
 if ($argc < 4)
-	die("usage: $argv[0] <awscli-profile-name> <domain-name> <zone-id> [archive-directory]\n");
+	die("usage: $argv[0] <awscli-profile-name> <domain-name> <zone-id> [archive-file]\n");
 
 $profile = $argv[1];
 $domain = $argv[2];
@@ -69,8 +69,11 @@ if (!empty($changes)) {
 
 	if (empty($response["ChangeInfo"]["Status"]) || $response["ChangeInfo"]["Status"] != "PENDING")
 		echo "error: wrong response from route53, request details left in file $file\n";
-	else if ($argc > 4 && file_exists($argv[4]))
-		rename($file, $argv[4]."/aws-dns-change-$profile-$domain.json");
-	else
+	else if ($argc < 5)
 		unlink($file);
+	else {
+		$path = dirname($argv[4]);
+		mkdir($path, 0711, true);
+		rename($file, $argv[4]);
+	}
 }

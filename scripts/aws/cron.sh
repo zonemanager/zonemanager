@@ -13,7 +13,7 @@ day=`date +%d`
 mon=`date +%m`
 year=`date +%Y`
 
-path=/var/cache/dns/$year/${year}${mon}/${year}${mon}${day}/$server/$hour
-mkdir -p $path
+path=/var/cache/dns/$year/${year}${mon}/${year}${mon}${day}/aws-route53/$hour
+file=$path/change-$profile-$domain.json
 
-/opt/zonemaster/scripts/aws/update-zone.php $1 $2 $3 $path
+/opt/zonemaster/scripts/aws/update-zone.php $1 $2 $3 $file
