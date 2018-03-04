@@ -3,4 +3,4 @@ language: php
 php:
   - 5.6
 
-script: php -l includes/functions.php
+script: php -l scripts/functions.php
