@@ -35,7 +35,7 @@ foreach ($master["A"] as $host => $ip) {
 
 $data .= "\n";
 foreach ($master["CNAME"] as $host => $alias) {
-	if (strrpos($alias, ".".$outzone, $offset) !== false)
+	if (strlen($alias) >= abs($offset) && strrpos($alias, ".".$outzone, $offset) !== false)
 		$target = substr($alias, 0, $offset);
 	else
 		$target = $alias.".";
