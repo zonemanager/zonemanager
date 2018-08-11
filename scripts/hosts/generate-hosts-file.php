@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-require_once dirname(__FILE__)."/../functions.php";
+require_once dirname(__FILE__)."/../db/functions.php";
 
 if ($argc < 3)
 	die("usage: $argv[0] <system> <zone>\n");
