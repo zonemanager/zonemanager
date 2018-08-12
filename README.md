@@ -88,23 +88,14 @@ changed or removed records) to proper DNS and DHCP servers.
 
 ZoneMaster currently supports:
 
-- MikroTik static DNS (internal DNS, including scanning current static DNS configuration
-  and creating ZoneMaster configuration straight from it)
-- Amazon Route53 (for public domain configuration)
+- [MikroTik](docs/mikrotik.md) static DNS and DHCP (including importing current DNS configuration to ZoneMaster database)
+- [Amazon Route53](docs/aws.md) (for public domain configuration)
 - /etc/hosts file (for internal use on management server, to avoid relying on DNS server)
-- BIND 9 (both public and LAN configurations)
+- [BIND 9](docs/bind.md) (both public and internal  configurations)
+- ISC-DHCP server
 
 
 # How it works
-
-### MikroTik RouterOS-based routers
-
-See [manual](docs/mikrotik.md)
-
-
-### BIND 9
-
-See [manual](docs/bind.md)
 
 
 ### local /etc/hosts file on management server
@@ -114,8 +105,3 @@ After creating `/etc/local/.dns/zone.*` files, just add this command to your cro
 ```
 /opt/zonemaster/scripts/hosts/cron.sh
 ```
-
-
-### Amazon Route53
-
-See [manual](docs/aws.md)
