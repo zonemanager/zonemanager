@@ -90,9 +90,9 @@ ZoneMaster currently supports:
 
 - [MikroTik](docs/mikrotik.md) static DNS and DHCP (including importing current DNS configuration to ZoneMaster database)
 - [Amazon Route53](docs/aws.md) (for public domain configuration)
-- /etc/hosts file (for internal use on management server, to avoid relying on DNS server)
+- [/etc/hosts](docs/hosts.md) file (for internal use on management server, to avoid relying on DNS server)
 - [BIND 9](docs/bind.md) (both public and internal  configurations)
-- ISC-DHCP server
+- [ISC-DHCP server](docs/dhcp.md)
 
 
 # How it works
