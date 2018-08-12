@@ -1,107 +1,121 @@
 [![Build Status](https://travis-ci.org/tomaszklim/zonemaster.png?branch=master)](https://travis-ci.org/tomaszklim/zonemaster)
 
 
-# The problem
+# Overview
 
-Imagine that you manage a medium-size local network, split across several offices and/or
-data centers, where you have:
+ZoneMaster is a tool designed for companies, that manage many domains, networks and associated DNS/DHCP servers. It allows having one central database of DNS/DHCP records and replicating them in a controlled way to various DNS/DHCP software or hardware:
 
-- servers and desktop computers (always connected in the same place)
-- laptops, tablets and mobile phones (connected in different offices)
+- [MikroTik](docs/mikrotik.md) routers - both DNS and DHCP, for internal networks (eg. office)
+- [Amazon Route53](docs/aws.md) service - for public domain DNS configuration
+- [BIND 9](docs/bind.md) - for both public and internal DNS configurations
+- [ISC-DHCP server](docs/dhcp.md) - for internal networks
+- [/etc/hosts](docs/hosts.md) file - DNS fallback for specific cases, to avoid relying on DNS server
 
-All these locations are connected using VPN tunnels and all these devices are visible for
-each other, but you still have to maintain separate DHCP (static leases) and DNS servers
-for each location. And while maintaining DHCP separately for each location can be (barely
-but still) acceptable, manual maintaining several DNS servers with similar internal entries
-can be true PITA.
+The idea behind ZoneMaster is that instead of having eg. 50 various places for configuring DNS entries for various domains and customers, user can maintain one simple and easy to maintain, central database, and no longer needs to care about various DNS admin panels, passwords for external accounts etc.
 
-The situation is even worse, if your locations are behind NAT, and you want to serve some
-websites to Internet. In such case you have to maintain separately private and public DNS
-entries.
+# ZoneMaster database
 
+## File format
 
-# The solution
-
-With ZoneMaster you can manage all your internal and external, DHCP and DNS servers from a
-single point. You just have to create a few simple files (manually or using provided scripts)
-with syntax similar to BIND zone files (and you can use comments inside them):
-
-Example main internal configuration file (common for all your locations):
+ZoneMaster database resembles BIND zone file format, but is simpler:
 
 ```
 # network devices
-router.home                              A          192.168.8.1
-router.office1                           A          192.168.11.1
-router.office2                           A          192.168.12.1
-ap1.office1                              A          192.168.11.2      00:11:22:33:44:55
-ap1.office2                              A          192.168.12.2      01:12:23:34:45:56
+router.home                         A          192.168.8.1
+router.office                       A          192.168.11.1
+router.dc1                          A          192.168.26.1
 
 # home servers
-dell1.home                               A          192.168.8.2       76:65:54:43:32:21
-dell2.home                               A          192.168.8.3       23:54:23:35:45:65
-movies.home                              CNAME      dell1.home
+printer.home                        A          192.168.8.2       23:54:23:35:45:65
+samba.home                          A          192.168.8.3       76:65:54:43:32:21
+movies.home                         CNAME      samba.home
 
-# desktop computers in the office
-accounting1.office1                      A          192.168.11.61     00:34:56:78:91:23
-accounting2.office1                      A          192.168.11.62     01:23:45:67:89:ab
-
-# laptops mobile across locations
-lap-boss.office1                         A          192.168.11.60     24:35:56:46:14:55
-lap-boss.office2                         A          192.168.12.60     24:35:56:46:14:55
-
-# servers
-server1.dc1                              A          192.168.26.3      75:2c:35:23:54:94
-server2.dc1                              A          192.168.26.4      75:2c:3f:45:43:23
+# company servers
+server.dc1                          A          192.168.26.3      75:2c:35:23:54:94
+printer.dc1                         A          192.168.26.4      75:2c:3f:45:43:23
 
 # CRM - directly from internal network
-crm.companydomain.com                    CNAME      server2.dc1
+crm.companydomain.com               CNAME      server.dc1
+
+# customer domains
+yourdomain.com                      CNAME      ec2-52-10-70-178.us-west-2.compute.amazonaws.com
+*.yourdomain.com                    CNAME      yourdomain.com
 ```
 
-Example internal configuration file for Office 1:
+The main difference between BIND zone file and ZoneMaster database is that all entries are mixed in one file (in fact, 5 files or more, see below), and that all entries are written in full form (not stripping suffix).
 
-```
-boss.internal                            CNAME      lap-boss.office1
-```
+Description of columns:
 
-Example internal configuration file for Office 2:
+1. Full hostname (required)
+2. Record type (required, one of: `A`, `CNAME`, `TXT`)
+3. Record value (required, IP address for `A`, hostname for `CNAME`, text string for `TXT` - possibly multi-line)
+4. MAC address for DHCP (optional)
 
-```
-boss.internal                            CNAME      lap-boss.office2
-```
+## Supported DNS record types
 
-Example public configuration file:
+ZoneMaster can manage 3 types of records: `A`, `CNAME`, and `TXT`. All other record types are supported in a way specific for particular DNS platform, but cannot be managed directly.
 
-```
-# basic domain configuration (can and should be extended)
-companydomain.com                        A          1.2.3.4  # some external hosting
-*.companydomain.com                      CNAME      companydomain.com
+## Public and internal DNS
 
-# CRM - public office IP address
-crm.companydomain.com                    A          11.22.33.44
-```
+ZoneMaster allows managing both `public` (Internet-wide) and `internal` (local) DNS services. Also, it is written to allow easy integration with other applications and custom-made scripts. That's why its database is divided into 5 or more files (all of them have exactly the same format).
 
-ZoneMaster reads these zone files and automatically pushes all changes (added,
-changed or removed records) to proper DNS and DHCP servers.
+##### Internal zones configuration is divided into 3 files:
 
+`/etc/local/.dns/zone.all` - common for all configured zones, holds all **static** entries (updated manually)
 
-# Supported DNS service providers
+`/etc/local/.dns/zone.yourzone` - separate for each configured zone, holds all zone-specific **static** entries (you can eg. have multiple offices, and in each office set hostname `printer.office` to have different IP address, specific to the local network)
 
-ZoneMaster currently supports:
+`/etc/local/.dns/zone.yourzone-dynamic` - separate for each configured zone, holds all zone-specific **dynamic** entries (these files are meant to be generated automatically by some external tool, at your disposal - otherwise they should be empty)
 
-- [MikroTik](docs/mikrotik.md) static DNS and DHCP (including importing current DNS configuration to ZoneMaster database)
-- [Amazon Route53](docs/aws.md) (for public domain configuration)
-- [/etc/hosts](docs/hosts.md) file (for internal use on management server, to avoid relying on DNS server)
-- [BIND 9](docs/bind.md) (both public and internal  configurations)
-- [ISC-DHCP server](docs/dhcp.md)
+##### Public domains configuration is divided into 2 files:
 
+`/etc/local/.dns/zone.public` - common for all configured domains, holds all **static** entries (updated manually)
 
-# How it works
+`/etc/local/.dns/zone.public-yourdomain.com` - separate for each configured domain, holds all **dynamic** entries (these files are meant to be generated automatically by some external tool, at your disposal - otherwise they should be empty)
 
+# Compatible operating systems
 
-### local /etc/hosts file on management server
+ZoneMaster is fully tested with Debian 8.x (Jessie), and all Ubuntu LTS versions since 14.04 LTS.
 
-After creating `/etc/local/.dns/zone.*` files, just add this command to your crontab:
+# Security
 
-```
-/opt/zonemaster/scripts/hosts/cron.sh
-```
+ZoneMaster relies on [Server Farmer](http://serverfarmer.org/basics.html) management framework and inherits very similar security implications:
+
+1. Central management server, called *farm manager*, has ssh root keys for **all** other managed servers, routers and DNS/DHCP services. Therefore, someone who has access to *farm manager*, can do literaly everything with your network, as well as with all networks, servers, domains etc. managed for your customers.
+
+2. Therefore, both Server Farmer and ZoneMaster are intentionally designed with one important functional limitation in mind: there can be only one *primary* administrator (who has access to *farm manager* and all ssh keys), and possibly unlimited number of other people with privileged access to particular managed servers/services.
+
+# How to contribute
+
+We are welcome to contributions of any kind: bug fixes, added code comments, support for new operating system versions or hardware etc.
+
+If you want to contribute:
+- fork this repository and clone it to your machine
+- create a feature branch and do the change inside it
+- push your feature branch to github and create a pull request
+
+# License
+
+|                      |                                          |
+|:---------------------|:-----------------------------------------|
+| **Author:**          | Tomasz Klim (<opensource@tomaszklim.pl>) |
+| **Copyright:**       | Copyright 2016-2018 Tomasz Klim          |
+| **License:**         | MIT                                      |
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
