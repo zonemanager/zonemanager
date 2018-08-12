@@ -11,7 +11,9 @@ ZoneMaster is a tool designed for companies, that manage many domains, networks 
 - [ISC-DHCP server](docs/dhcp.md) - for internal networks
 - [/etc/hosts](docs/hosts.md) file - DNS fallback for specific cases, to avoid relying on DNS server
 
-The idea behind ZoneMaster is that instead of having eg. 50 various places for configuring DNS entries for various domains and customers, user can maintain one simple and easy to maintain, central database, and no longer needs to care about various DNS admin panels, passwords for external accounts etc.
+Click on chosen link to see the detailed setup instructions.
+
+The idea behind ZoneMaster is that instead of having eg. 50 various places for configuring DNS entries for various domains and customers, user can maintain one simple and easy to understand, central database, and no longer needs to care about various DNS admin panels, passwords for external accounts etc.
 
 # ZoneMaster database
 
@@ -81,9 +83,11 @@ ZoneMaster is fully tested with Debian 8.x (Jessie), and all Ubuntu LTS versions
 
 ZoneMaster relies on [Server Farmer](http://serverfarmer.org/basics.html) management framework and inherits very similar security implications:
 
-1. Central management server, called *farm manager*, has ssh root keys for **all** other managed servers, routers and DNS/DHCP services. Therefore, someone who has access to *farm manager*, can do literaly everything with your network, as well as with all networks, servers, domains etc. managed for your customers.
+1. Central management server, called *farm manager*, has ssh root keys for **all** other managed servers, routers and DNS/DHCP services. Therefore, someone who has access to *farm manager*, can do literaly **everything** with your network, as well as with all networks, servers, domains etc. managed for your customers.
 
 2. Therefore, both Server Farmer and ZoneMaster are intentionally designed with one important functional limitation in mind: there can be only one *primary* administrator (who has access to *farm manager* and all ssh keys), and possibly unlimited number of other people with privileged access to particular managed servers/services.
+
+Such security model fits many software houses and IT outsourcing companies. But before starting your adventure with ZoneMaster and/or Server Farmer, consider first, if this security model is acceptable for you and your company.
 
 # How to contribute
 
