@@ -1,7 +1,4 @@
 #!/bin/bash
-. /opt/farm/scripts/init
-. /opt/farm/scripts/functions.custom
-
 
 if [ "$4" = "" ]; then
 	echo "usage: $0 <dhcp-server> <zone> <network-address> <network-mask> [authoritative]"
@@ -15,7 +12,7 @@ server=$1
 zone=$2
 netaddr=$3
 netmask=$4
-key=`ssh_dedicated_key_storage_filename $server root`
+key=`/opt/farm/ext/keys/get-ssh-dedicated-key.sh $server root`
 
 hour=`date +%H%M`
 day=`date +%d`

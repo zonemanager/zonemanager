@@ -1,7 +1,4 @@
 #!/bin/bash
-. /opt/farm/scripts/init
-. /opt/farm/scripts/functions.custom
-
 
 if [ "$1" = "--public" ]; then
 	shift
@@ -20,7 +17,7 @@ fi
 
 server=$1
 inzone=$2
-key=`ssh_dedicated_key_storage_filename $server root`
+key=`/opt/farm/ext/keys/get-ssh-dedicated-key.sh $server root`
 shift
 shift
 
