@@ -2,22 +2,22 @@
 
 ## Overview
 
-ZoneMaster can provision ISC-DHCP servers. The whole provisioning process is based on Server Farmer ssh/scp-passwordless connections, so you first need to install Server Farmer:
+Zone Manager can provision ISC-DHCP servers. The whole provisioning process is based on Server Farmer ssh/scp-passwordless connections, so you first need to install Server Farmer:
 
 - on all DHCP server hosts that you want to provision
-- on ZoneMaster central instance (it has to be *farm manager* for DHCP server hosts)
+- on Zone Manager central instance (it has to be *farm manager* for DHCP server hosts)
 
 You can find more instructions about Server Farmer [here](http://serverfarmer.org/getting-started.html).
 
 ## Provisioning process
 
-Once you completed creating an initial database for ZoneMaster, you can add such scripts to your /etc/crontab file (one entry per DHCP server):
+Once you completed creating an initial database for Zone Manager, you can add such scripts to your /etc/crontab file (one entry per DHCP server):
 
 ```
-*/30 * * * * root /opt/zonemaster/scripts/dhcpd/cron.sh your-dhcp-server.local yourzone 192.168.8.0 255.255.255.0 authoritative
+*/30 * * * * root /opt/zonemanager/scripts/dhcpd/cron.sh your-dhcp-server.local yourzone 192.168.8.0 255.255.255.0 authoritative
 ```
 
-Arguments 192.168.8.0 and 255.255.255.0 are the local network address and mask, that are configured in DHCP pool. ZoneMaster will filter out all database entries, that don't match given network - so you can safely mix entries for different physical networks and DHCP servers within a single database.
+Arguments 192.168.8.0 and 255.255.255.0 are the local network address and mask, that are configured in DHCP pool. Zone Manager will filter out all database entries, that don't match given network - so you can safely mix entries for different physical networks and DHCP servers within a single database.
 
 How the provisioning process works:
 
@@ -27,7 +27,7 @@ How the provisioning process works:
 
 ## Configuration structure
 
-ZoneMaster is primarily focused on DNS management. It keeps configuration for internal (eg. home, office) zones divided into 3 files:
+Zone Manager is primarily focused on DNS management. It keeps configuration for internal (eg. home, office) zones divided into 3 files:
 
 `/etc/local/.dns/zone.all` - common for all configured zones, holds all static entries (updated manually)
 
@@ -68,7 +68,7 @@ subnet 192.168.8.0 netmask 255.255.255.0 {
 @@entries@@
 ```
 
-Such template should contain 2 keywords, which are expanded by ZoneMaster:
+Such template should contain 2 keywords, which are expanded by Zone Manager:
 
 - `@@entries@@` - expanded to generated list of DHCP records
 - `@@authoritative@@` - expanded to either `authoritative;` configuration directive, or to empty string (depending on the last argument in crontab invocation, see above)

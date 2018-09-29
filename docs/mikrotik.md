@@ -2,7 +2,7 @@
 
 ## Before you start
 
-ZoneMaster connects to MikroTik routers using ssh, with key authentication. Before going further, you need to generate ssh DSA (not RSA) key pair and install public key on all routers you plan to connect to.
+Zone Manager connects to MikroTik routers using ssh, with key authentication. Before going further, you need to generate ssh DSA (not RSA) key pair and install public key on all routers you plan to connect to.
 
 ```
 ssh-keygen -t dsa -f /etc/local/.ssh/id_backup_mikrotik
@@ -30,7 +30,7 @@ ssh -p 10022 admin@router.yourdomain.com
 If you already have some static DNS entries configured on your MikroTik router, you can scan them and automatically create zone files:
 
 ```
-/opt/zonemaster/scripts/mikrotik/scan-dns.php router.yourdomain.com >/etc/local/.dns/zone.all.new
+/opt/zonemanager/scripts/mikrotik/scan-dns.php router.yourdomain.com >/etc/local/.dns/zone.all.new
 ```
 
 This script will generate the zone file (which will need some manual fine-tuning later - see below). To avoid overwriting your `zone.all` main zone file, the above example appends ".new" suffix to the file name (you have to either rename it to `zone.all` or copy chosen entries between these files).
@@ -38,16 +38,16 @@ This script will generate the zone file (which will need some manual fine-tuning
 **When you finished creating your zone configuration**, add this script to your /etc/crontab file (one entry per router):
 
 ```
-0 * * * * root /opt/zonemaster/scripts/mikrotik/update-dns.php yourzone router.yourdomain.com
-0 * * * * root /opt/zonemaster/scripts/mikrotik/update-dns.php office2 office2-router.yourdomain.com
-0 * * * * root /opt/zonemaster/scripts/mikrotik/update-dns.php office3 office3-router.yourdomain.com
+0 * * * * root /opt/zonemanager/scripts/mikrotik/update-dns.php yourzone router.yourdomain.com
+0 * * * * root /opt/zonemanager/scripts/mikrotik/update-dns.php office2 office2-router.yourdomain.com
+0 * * * * root /opt/zonemanager/scripts/mikrotik/update-dns.php office3 office3-router.yourdomain.com
 ```
 
 In the above example there are 3 internal zones: `home`, `office1` and `office2`. If you only have one router, you can name your zone just like your local domain suffix, eg. `home`. Each physical network is a separate zone. See below for details.
 
 ## Domain configuration structure
 
-ZoneMaster uses 2 types of domain configuration: `internal` and `public` (MikroTik is always `internal`).
+Zone Manager uses 2 types of domain configuration: `internal` and `public` (MikroTik is always `internal`).
 
 Internal configuration is divided into 3 files:
 
@@ -61,11 +61,11 @@ All these files support optional 4th column with MAC address. Only entries with 
 
 ## DNS record types
 
-ZoneMaster manages 3 DNS record types: `A`, `CNAME` and `TXT`. However, static DNS service in MikroTik routers supports only `A` records. So:
+Zone Manager manages 3 DNS record types: `A`, `CNAME` and `TXT`. However, static DNS service in MikroTik routers supports only `A` records. So:
 
 - `TXT` records are not supported (and just ignored)
-- ZoneMaster converts `CNAME` records on-the-fly to `A` records, expanding alias hostname to IP (however this requires that alias hostname has its entry in ZoneMaster database)
-- when scanning existing static DNS, ZoneMaster checks `ttl` field of each record (entries valid for day or longer are considered `A` records, while entries valid for hours are converted back to `CNAME` records)
+- Zone Manager converts `CNAME` records on-the-fly to `A` records, expanding alias hostname to IP (however this requires that alias hostname has its entry in Zone Manager database)
+- when scanning existing static DNS, Zone Manager checks `ttl` field of each record (entries valid for day or longer are considered `A` records, while entries valid for hours are converted back to `CNAME` records)
 
 ## Example configuration files
 
@@ -104,12 +104,12 @@ printer.internal                         CNAME      printer.dc1
 
 ## Configure DHCP
 
-ZoneMaster can also manage MikroTik DHCP Server service, using the same zone configuration files. As you can see on the above example, each `A` record can have optional 4th column with MAC address.
+Zone Manager can also manage MikroTik DHCP Server service, using the same zone configuration files. As you can see on the above example, each `A` record can have optional 4th column with MAC address.
 
 **When you finished creating your zone configuration**, add this script to your /etc/crontab file (one entry per router):
 
 ```
-0 * * * * root /opt/zonemaster/scripts/mikrotik/update-dhcp.php yourzone router.yourdomain.com 192.168.8.0 255.255.255.0
+0 * * * * root /opt/zonemanager/scripts/mikrotik/update-dhcp.php yourzone router.yourdomain.com 192.168.8.0 255.255.255.0
 ```
 
 The last 2 arguments here (192.168.8.0 and 255.255.255.0) are the local network address and mask, that are configured in DHCP pool of `router.yourdomain.com` router.

@@ -16,4 +16,4 @@ year=`date +%Y`
 path=/var/cache/dns/$year/${year}${mon}/${year}${mon}${day}/aws/$hour
 file=$path/change-$1-$2.json
 
-/opt/zonemaster/scripts/aws/update-zone.php $1 $2 $3 $file
+/opt/zonemanager/scripts/aws/update-zone.php $1 $2 $3 $file

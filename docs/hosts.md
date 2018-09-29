@@ -2,11 +2,11 @@
 
 `/etc/hosts` is a special file, that contains mapping between particular hostnames and IP addresses.
 
-If ZoneMaster is run on the same host, as primary DNS server, it can provision this file with all `A` records, and all `CNAME` records, for which destination hostname also has `A` record.
+If Zone Manager is run on the same host, as primary DNS server, it can provision this file with all `A` records, and all `CNAME` records, for which destination hostname also has `A` record.
 
 ## Domain configuration structure
 
-ZoneMaster uses 2 types of domain configuration: `internal` and `public` (`/etc/hosts` file is always `internal`).
+Zone Manager uses 2 types of domain configuration: `internal` and `public` (`/etc/hosts` file is always `internal`).
 
 Internal configuration is divided into 3 files:
 
@@ -18,7 +18,7 @@ Internal configuration is divided into 3 files:
 
 ## /etc/hosts restrictions
 
-When generating `/etc/hosts` file, ZoneMaster skips these records:
+When generating `/etc/hosts` file, Zone Manager skips these records:
 
 - all wildcard records (with `*` character, eg. `*.samba.office`)
 - `TXT` records (only `A` and `CNAME` are supported)
@@ -26,8 +26,8 @@ When generating `/etc/hosts` file, ZoneMaster skips these records:
 
 ## Provisioning process
 
-Once you completed creating an initial database for ZoneMaster, you can this script to your /etc/crontab file:
+Once you completed creating an initial database for Zone Manager, you can this script to your /etc/crontab file:
 
 ```
-*/30 * * * * root /opt/zonemaster/scripts/hosts/cron.sh
+*/30 * * * * root /opt/zonemanager/scripts/hosts/cron.sh
 ```

@@ -1,9 +1,11 @@
-[![Build Status](https://travis-ci.org/tomaszklim/zonemaster.png?branch=master)](https://travis-ci.org/tomaszklim/zonemaster)
+[![Build Status](https://travis-ci.org/zonemanager/zonemanager.png?branch=master)](https://travis-ci.org/zonemanager/zonemanager)
+
+![Zone Manager logo](docs/logo.png)
 
 
 # Overview
 
-ZoneMaster is a tool designed for companies, that manage many domains, networks and associated DNS/DHCP servers. It allows having one central database of DNS/DHCP records and replicating them in a controlled way to various DNS/DHCP software or hardware:
+Zone Manager is a tool designed for companies, that manage many domains, networks and associated DNS/DHCP servers. It allows having one central database of DNS/DHCP records and replicating them in a controlled way to various DNS/DHCP software or hardware:
 
 - [MikroTik](docs/mikrotik.md) routers - both DNS and DHCP, for internal networks (eg. office)
 - [Amazon Route53](docs/aws.md) service - for public domain DNS configuration
@@ -13,13 +15,13 @@ ZoneMaster is a tool designed for companies, that manage many domains, networks 
 
 Click on chosen link to see the detailed setup instructions.
 
-The idea behind ZoneMaster is that instead of having eg. 50 various places for configuring DNS entries for various domains and customers, user can maintain one simple and easy to understand, central database, and no longer needs to care about various DNS admin panels, passwords for external accounts etc.
+The idea behind Zone Manager is that instead of having eg. 50 various places for configuring DNS entries for various domains and customers, user can maintain one simple and easy to understand, central database, and no longer needs to care about various DNS admin panels, passwords for external accounts etc.
 
-# ZoneMaster database
+# Zone Manager database
 
 ## File format
 
-ZoneMaster database resembles BIND zone file format, but is simpler:
+Zone Manager database resembles BIND zone file format, but is simpler:
 
 ```
 # network devices
@@ -44,7 +46,7 @@ yourdomain.com                      CNAME      ec2-52-10-70-178.us-west-2.comput
 *.yourdomain.com                    CNAME      yourdomain.com
 ```
 
-The main difference between BIND zone file and ZoneMaster database is that all entries are mixed in one file (in fact, 5 files or more, see below), and that all entries are written in full form (not stripping suffix).
+The main difference between BIND zone file and Zone Manager database is that all entries are mixed in one file (in fact, 5 files or more, see below), and that all entries are written in full form (not stripping suffix).
 
 Description of columns:
 
@@ -55,11 +57,11 @@ Description of columns:
 
 ## Supported DNS record types
 
-ZoneMaster can manage 3 types of records: `A`, `CNAME`, and `TXT`. All other record types are supported in a way specific for particular DNS platform, but cannot be managed directly.
+Zone Manager can manage 3 types of records: `A`, `CNAME`, and `TXT`. All other record types are supported in a way specific for particular DNS platform, but cannot be managed directly.
 
 ## Public and internal DNS
 
-ZoneMaster allows managing both `public` (Internet-wide) and `internal` (local) DNS services. Also, it is written to allow easy integration with other applications and custom-made scripts. That's why its database is divided into 5 or more files (all of them have exactly the same format).
+Zone Manager allows managing both `public` (Internet-wide) and `internal` (local) DNS services. Also, it is written to allow easy integration with other applications and custom-made scripts. That's why its database is divided into 5 or more files (all of them have exactly the same format).
 
 ##### Internal zones configuration is divided into 3 files:
 
@@ -77,17 +79,17 @@ ZoneMaster allows managing both `public` (Internet-wide) and `internal` (local) 
 
 # Compatible operating systems
 
-ZoneMaster is fully tested with Debian 8.x (Jessie), and all Ubuntu LTS versions since 14.04 LTS.
+Zone Manager is fully tested with Debian 8.x (Jessie), and all Ubuntu LTS versions since 14.04 LTS.
 
 # Security
 
-ZoneMaster relies on [Server Farmer](http://serverfarmer.org/basics.html) management framework and inherits very similar security implications:
+Zone Manager relies on [Server Farmer](http://serverfarmer.org/basics.html) management framework and inherits very similar security implications:
 
 1. Central management server, called *farm manager*, has ssh root keys for **all** other managed servers, routers and DNS/DHCP services. Therefore, someone who has access to *farm manager*, can do literaly **everything** with your network, as well as with all networks, servers, domains etc. managed for your customers.
 
-2. Therefore, both Server Farmer and ZoneMaster are intentionally designed with one important functional limitation in mind: there can be only one *primary* administrator (who has access to *farm manager* and all ssh keys), and possibly unlimited number of other people with privileged access to particular managed servers/services.
+2. Therefore, both Server Farmer and Zone Manager are intentionally designed with one important functional limitation in mind: there can be only one *primary* administrator (who has access to *farm manager* and all ssh keys), and possibly unlimited number of other people with privileged access to particular managed servers/services.
 
-Such security model fits many software houses and IT outsourcing companies. But before starting your adventure with ZoneMaster and/or Server Farmer, consider first, if this security model is acceptable for you and your company.
+Such security model fits many software houses and IT outsourcing companies. But before starting your adventure with Zone Manager and/or Server Farmer, consider first, if this security model is acceptable for you and your company.
 
 # How to contribute
 
