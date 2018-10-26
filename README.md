@@ -9,6 +9,7 @@ Zone Manager is a tool designed for companies, that manage many domains, network
 
 - [MikroTik](docs/mikrotik.md) routers - both DNS and DHCP, for internal networks (eg. office)
 - [Amazon Route53](docs/aws.md) service - for public domain DNS configuration
+- [Cloudflare](docs/cloudflare.md) service - for public domain DNS configuration
 - [BIND 9](docs/bind.md) - for both public and internal DNS configurations
 - [ISC-DHCP server](docs/dhcp.md) - for internal networks
 - [/etc/hosts](docs/hosts.md) file - DNS fallback for specific cases, to avoid relying on DNS server
