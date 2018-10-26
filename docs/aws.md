@@ -18,7 +18,8 @@ Zone Manager relies on Server Farmer, so first you need to install it on your se
 Next, install `awscli` AWS command line tool and PHP command line. All required software (including dependencies) is installed by this Server Farmer extension:
 
 ```
-/opt/farm/scripts/setup/extension.sh sf-cloud-client-ec2
+apt-get install libyaml-dev libpython-dev python-yaml python-pip
+pip install awscli
 ```
 
 ## Configure Zone Manager
@@ -26,7 +27,7 @@ Next, install `awscli` AWS command line tool and PHP command line. All required 
 First, configure AWS account. You will be asked for your access key and secret access key (see above), and some other things, that don't matter for Route53 (so just choose default values). In this example, `zone1` is the name for your AWS account (you can configure Zone Manager to use different AWS account for each hosted zone):
 
 ```
-/opt/farm/ext/cloud-client-ec2/utils/setup-account.sh zone1
+aws configure --profile zone1
 ```
 
 Now let's start creating your zone files. You can just use this script (replace `Z25SD356N45NLE` with your zone ID, and `yourdomain.com` with your domain name):
