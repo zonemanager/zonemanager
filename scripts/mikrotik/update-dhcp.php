@@ -44,6 +44,6 @@ if (!empty($changes)) {
 	foreach ($changes as $change) {
 		$out = shell_exec("$mikrotik $change");
 		if (!empty($out))
-			echo "error: $out\n";
+			echo trim($out)." [$change]\n";
 	}
 }
