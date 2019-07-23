@@ -22,4 +22,4 @@ fi
 # further details: http://fajne.it/automatyzacja-backupu-routera-mikrotik.html
 #
 sshkey=`/opt/farm/ext/keys/get-ssh-device-key.sh mikrotik`
-ssh -y -i $sshkey -p $port -o StrictHostKeyChecking=no admin@$host $@
+ssh -y -i $sshkey -p $port -o StrictHostKeyChecking=no -o PubkeyAcceptedKeyTypes=+ssh-dss admin@$host $@
