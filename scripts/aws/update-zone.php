@@ -22,6 +22,9 @@ $types = array("A", "CNAME", "TXT");
 $json = shell_exec("$aws route53 list-resource-record-sets --hosted-zone-id $zoneid");
 $sets = json_decode($json, true);
 
+foreach ($types as $type)
+	$current[$type] = array();
+
 foreach ($sets["ResourceRecordSets"] as $entry) {
 	$type = $entry["Type"];
 	$tmp = str_replace("\\052", "*", $entry["Name"]);
