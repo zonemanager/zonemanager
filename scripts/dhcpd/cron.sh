@@ -12,7 +12,6 @@ server=$1
 zone=$2
 netaddr=$3
 netmask=$4
-key=`/opt/farm/ext/keys/get-ssh-dedicated-key.sh $host root`
 
 if [ -z "${server##*:*}" ]; then
 	host="${server%:*}"
@@ -21,6 +20,8 @@ else
 	host=$server
 	port=22
 fi
+
+key=`/opt/farm/ext/keys/get-ssh-dedicated-key.sh $host root`
 
 hour=`date +%H%M`
 day=`date +%d`
