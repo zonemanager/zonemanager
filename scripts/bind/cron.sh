@@ -10,7 +10,7 @@ fi
 if [ "$3" = "" ]; then
 	echo "usage: $0 [--public] <dns-server[:port]> <zone> <domain> [domain] [...]"
 	exit 1
-elif ! [[ $1 =~ ^[a-z0-9.-]+[.][a-z0-9]+$ ]]; then
+elif ! [[ $1 =~ ^[a-z0-9.-]+[.][a-z0-9]+([:][0-9]+)?$ ]]; then
 	echo "error: parameter $1 not conforming hostname format"
 	exit 1
 fi
