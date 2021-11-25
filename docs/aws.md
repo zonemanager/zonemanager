@@ -33,7 +33,7 @@ aws configure --profile zone1
 Now let's start creating your zone files. You can just use this script (replace `Z25SD356N45NLE` with your zone ID, and `yourdomain.com` with your domain name):
 
 ```
-/opt/zonemanager/scripts/aws/scan-zone.php zone1 Z25SD356N45NLE >/etc/local/.dns/yourdomain.com
+/opt/zonemanager/scripts/aws/scan-zone.php zone1 Z25SD356N45NLE >~/.zonemanager/dns/yourdomain.com
 ```
 
 It will scan the initial configuration of your domain record sets and will generate the zone
@@ -55,20 +55,20 @@ Zone Manager uses 2 types of domain configuration: `internal` and `public` (Amaz
 
 Public configuration is divided into 2 files:
 
-`/etc/local/.dns/zone.public` - common for all configured domains, holds all static entries (updated manually)
+`~/.zonemanager/dns/zone.public` - common for all configured domains, holds all static entries (updated manually)
 
-`/etc/local/.dns/zone.public-yourdomain.com` - separate for each configured domain, holds all dynamic entries (these files are meant to be generated automatically by some external tool, at your disposal - otherwise they should be empty)
+`~/.zonemanager/dns/zone.public-yourdomain.com` - separate for each configured domain, holds all dynamic entries (these files are meant to be generated automatically by some external tool, at your disposal - otherwise they should be empty)
 
 ## Example configuration files
 
-`/etc/local/.dns/zone.public` file:
+`~/.zonemanager/dns/zone.public` file:
 
 ```
 # basic domain configuration (static entries)
 mx.yourdomain.com                        A        52.35.36.25
 ```
 
-`/etc/local/.dns/zone.public-yourdomain.com` file:
+`~/.zonemanager/dns/zone.public-yourdomain.com` file:
 
 ```
 # this file contains frequently changed entries and is generated automatically

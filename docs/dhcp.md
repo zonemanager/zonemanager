@@ -11,7 +11,7 @@ You can find more instructions about Server Farmer [here](http://serverfarmer.or
 
 ## Provisioning process
 
-Once you completed creating an initial database for Zone Manager, you can add such scripts to your /etc/crontab file (one entry per DHCP server):
+Once you completed creating an initial database for Zone Manager, you can add such scripts to your `/etc/crontab` file (one entry per DHCP server):
 
 ```
 */30 * * * * root /opt/zonemanager/scripts/dhcpd/cron.sh your-dhcp-server.local yourzone 192.168.8.0 255.255.255.0 authoritative
@@ -21,7 +21,7 @@ Arguments 192.168.8.0 and 255.255.255.0 are the local network address and mask, 
 
 How the provisioning process works:
 
-- dhcpd.conf file is created locally and saved into `/var/cache/dns` directory
+- dhcpd.conf file is created locally and saved into `~/.zonemanager/cache` directory
 - dhcpd.conf file is copied using scp to `/etc/dhcp` directory on DHCP server
 - `isc-dhcp-server` service is restarted
 
@@ -29,11 +29,11 @@ How the provisioning process works:
 
 Zone Manager is primarily focused on DNS management. It keeps configuration for internal (eg. home, office) zones divided into 3 files:
 
-`/etc/local/.dns/zone.all` - common for all configured zones, holds all static entries (updated manually)
+`~/.zonemanager/dns/zone.all` - common for all configured zones, holds all static entries (updated manually)
 
-`/etc/local/.dns/zone.yourzone` - separate for each configured zone, holds all zone-specific static entries (you can eg. have multiple offices, and in each office set hostname `printer.office` to have different IP address, specific to the local network)
+`~/.zonemanager/dns/zone.yourzone` - separate for each configured zone, holds all zone-specific static entries (you can eg. have multiple offices, and in each office set hostname `printer.office` to have different IP address, specific to the local network)
 
-`/etc/local/.dns/zone.yourzone-dynamic` - separate for each configured zone, holds all zone-specific dynamic entries (these files are meant to be generated automatically by some external tool, at your disposal - otherwise they should be empty)
+`~/.zonemanager/dns/zone.yourzone-dynamic` - separate for each configured zone, holds all zone-specific dynamic entries (these files are meant to be generated automatically by some external tool, at your disposal - otherwise they should be empty)
 
 Example entries:
 
@@ -46,7 +46,7 @@ The last, 4th column is optional and contains MAC address. Only entries with MAC
 
 ### Configuration templates
 
-Each physical network (zone) has its own configuration template. This is the example template named `/etc/local/.dns/dhcpd.yourzone`:
+Each physical network (zone) has its own configuration template. This is the example template named `~/.zonemanager/dns/dhcpd.yourzone`:
 
 ```
 ddns-update-style none;

@@ -28,7 +28,7 @@ day=`date +%d`
 mon=`date +%m`
 year=`date +%Y`
 
-path=/var/cache/dns/$year/${year}${mon}/${year}${mon}${day}/$host/$hour
+path=~/.zonemanager/cache/$year/${year}${mon}/${year}${mon}${day}/$host/$hour
 mkdir -p $path
 
 file=$path/dhcpd.conf

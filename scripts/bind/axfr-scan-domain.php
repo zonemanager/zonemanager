@@ -77,5 +77,6 @@ foreach ($other as $record) {
 }
 $template .= "\n@@entries@@\n";
 
-file_put_contents("/etc/local/.dns/bind.$domain.dist", $template);
-file_put_contents("/etc/local/.dns/zone.$domain.dist", $zonefile);
+$home = getenv("HOME");
+file_put_contents("$home/.zonemanager/dns/bind.$domain.dist", $template);
+file_put_contents("$home/.zonemanager/dns/zone.$domain.dist", $zonefile);

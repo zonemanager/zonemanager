@@ -25,7 +25,8 @@ if ($authoritative)
 else
 	$authcmd = "";
 
-$content = file_get_contents("/etc/local/.dns/dhcpd.$inzone");
+$home = getenv("HOME");
+$content = file_get_contents("$home/.zonemanager/dns/dhcpd.$inzone");
 $content = str_replace("@@entries@@", $data, $content);
 $content = str_replace("@@authoritative@@", $authcmd, $content);
 file_put_contents($file, $content);

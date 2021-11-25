@@ -66,17 +66,17 @@ Zone Manager allows managing both `public` (Internet-wide) and `internal` (local
 
 ##### Internal zones configuration is divided into 3 files:
 
-`/etc/local/.dns/zone.all` - common for all configured zones, holds all **static** entries (updated manually)
+`~/.zonemanager/dns/zone.all` - common for all configured zones, holds all **static** entries (updated manually)
 
-`/etc/local/.dns/zone.yourzone` - separate for each configured zone, holds all zone-specific **static** entries (you can eg. have multiple offices, and in each office set hostname `printer.office` to have different IP address, specific to the local network)
+`~/.zonemanager/dns/zone.yourzone` - separate for each configured zone, holds all zone-specific **static** entries (you can eg. have multiple offices, and in each office set hostname `printer.office` to have different IP address, specific to the local network)
 
-`/etc/local/.dns/zone.yourzone-dynamic` - separate for each configured zone, holds all zone-specific **dynamic** entries (these files are meant to be generated automatically by some external tool, at your disposal - otherwise they should be empty)
+`~/.zonemanager/dns/zone.yourzone-dynamic` - separate for each configured zone, holds all zone-specific **dynamic** entries (these files are meant to be generated automatically by some external tool, at your disposal - otherwise they should be empty)
 
 ##### Public domains configuration is divided into 2 files:
 
-`/etc/local/.dns/zone.public` - common for all configured domains, holds all **static** entries (updated manually)
+`~/.zonemanager/dns/zone.public` - common for all configured domains, holds all **static** entries (updated manually)
 
-`/etc/local/.dns/zone.public-yourdomain.com` - separate for each configured domain, holds all **dynamic** entries (these files are meant to be generated automatically by some external tool, at your disposal - otherwise they should be empty)
+`~/.zonemanager/dns/zone.public-yourdomain.com` - separate for each configured domain, holds all **dynamic** entries (these files are meant to be generated automatically by some external tool, at your disposal - otherwise they should be empty)
 
 # Compatible operating systems
 

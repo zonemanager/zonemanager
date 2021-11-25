@@ -2,7 +2,8 @@
 
 function cf_client($zone)
 {
-	$file = "/etc/local/.cloudflare/$zone.headers";
+	$home = getenv("HOME");
+	$file = "$home/.zonemanager/accounts/cloudflare/$zone.headers";
 	$command = "curl -s -H \"Content-Type: application/json\"";
 
 	$lines = file($file);

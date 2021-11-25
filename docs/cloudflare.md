@@ -22,8 +22,8 @@ Cloudflare uses more than one API authentication model. This page shows how to a
 So, let's create an authentication file. For each domain you need a separate one (so you can use many Cloudflare accounts):
 
 ```
-mkdir -m 0700 -p /etc/local/.cloudflare
-touch /etc/local/.cloudflare/yourdomain.com.headers
+mkdir -m 0700 -p ~/.zonemanager/accounts/cloudflare
+touch ~/.zonemanager/accounts/cloudflare/yourdomain.com.headers
 ```
 
 How this file should look like:
@@ -50,21 +50,21 @@ Zone Manager uses 2 types of domain configuration: `internal` and `public` (Clou
 
 Public configuration is divided into 2 files:
 
-`/etc/local/.dns/zone.public` - common for all configured domains, holds all static entries (updated manually)
+`~/.zonemanager/dns/zone.public` - common for all configured domains, holds all static entries (updated manually)
 
-`/etc/local/.dns/zone.public-yourdomain.com` - separate for each configured domain, holds all dynamic entries (these files are meant to be generated automatically by some external tool, at your disposal - otherwise they should be empty)
+`~/.zonemanager/dns/zone.public-yourdomain.com` - separate for each configured domain, holds all dynamic entries (these files are meant to be generated automatically by some external tool, at your disposal - otherwise they should be empty)
 
 
 ## Example configuration files
 
-`/etc/local/.dns/zone.public` file:
+`~/.zonemanager/dns/zone.public` file:
 
 ```
 # basic domain configuration (static entries)
 mx.yourdomain.com                        A        52.35.36.25
 ```
 
-`/etc/local/.dns/zone.public-yourdomain.com` file:
+`~/.zonemanager/dns/zone.public-yourdomain.com` file:
 
 ```
 # this file contains frequently changed entries and is generated automatically

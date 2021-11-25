@@ -1,6 +1,6 @@
 #!/bin/sh
 
-path=/etc/local/.dns
+path=~/.zonemanager/dns
 
 zone=$1
 
