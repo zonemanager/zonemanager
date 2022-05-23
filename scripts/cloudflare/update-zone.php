@@ -39,6 +39,7 @@ foreach ($types as $type) {
 		if ($type == "TXT") {
 			$lines = explode("\n", str_replace('"', '', $value));
 			sort($lines);
+			sort($current[$type][$host]);
 
 			if (!isset($current[$type][$host])) {
 				foreach ($lines as $line)
